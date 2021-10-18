@@ -23,7 +23,7 @@
                   <i class="fa fa-bookmark sr-icons"></i> About
                 </a>
               </li>            
-              <li class="<?= (esOpcionMenuActiva("blog")? "active" : "");?> lien">
+              <li class="<?= (existeOpcionMenuActivaEnArray(["blog","single_post"])? "active" : "");?> lien">
                 <a href="<?= (esOpcionMenuActiva("blog")? "#" : "/blog.php");?>">              
                   <i class="fa fa-file-text sr-icons"></i> Blog
                 </a>
