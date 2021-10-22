@@ -32,7 +32,12 @@
                 <a href="<?= (esOpcionMenuActiva("contact")? "#" : "/contact.php");?>"> 
                 <i class="fa fa-phone-square sr-icons"></i> Contact
               </a>
-            </li>          
+            </li>    
+            <li class="<?= (esOpcionMenuActiva("galeria")? "active" : "");?> lien">
+                <a href="<?= (esOpcionMenuActiva("galeria")? "#" : "/galeria.php");?>"> 
+                <i class="fa fa-image sr-icons"></i> Galería
+              </a>
+            </li>       
 
               </ul>
          </div>
