@@ -15,7 +15,7 @@ class App
      */
     public static function bind(string $key,$value)
     {
-        self::$container[$key] = $value;
+        static::$container[$key] = $value;
     }
     
     /**
@@ -28,6 +28,6 @@ class App
         if(!array_key_exists($key, static::$container)){
             throw new AppException("No se ha encontrado la clave $key en el contenedor");
         }
-        return self::$container[$key];
+        return static::$container[$key];
     }
 }

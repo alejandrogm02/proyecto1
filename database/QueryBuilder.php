@@ -27,16 +27,7 @@ abstract class QueryBuilder
     
     public function findAll(){
         $sql = "SELECT * FROM $this->table";
-        try{
-            $pdoStatement = $this->connection->prepare($sql);
-            $pdoStatement->execute();
-            $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE,
-            $this->classEntity);
-            return $pdoStatement->fetchAll();
-        }catch(\PDOException $pdoException){
-            throw new QueryException('No se ha podido ejecutar la consulta solicitada:
-             ' . $pdoException->getMessage());
-        }
+        return $this->executeQuery($sql);
     }
     public function save(Entity $entity)
     {
@@ -48,13 +39,82 @@ abstract class QueryBuilder
                 implode(', ', array_keys($parameters)),
                 ':' . implode(', :', array_keys($parameters))
             );
-
             $statement = $this->connection->prepare($sql);
             $statement->execute($parameters);
 
         }catch (\PDOException $pdoException){
             throw new QueryException("Error al insertar en la base de datos: " .
             $pdoException->getMessage());
+        }
+    }
+    public function executeQuery(string $sql){
+        try{
+            $pdoStatement = $this->connection->prepare($sql);
+            $pdoStatement->execute();
+            $pdoStatement->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->classEntity);
+            return $pdoStatement->fetchAll();
+        }catch(\PDOException $pdoException){
+            throw new QueryException('No se ha podido ejecutar la consulta solicitada: ' .
+            $pdoException->getMessage());
+        }
+    }
+    public function findById(int $id){
+        $sql = "SELECT * FROM $this->table WHERE id = $id";
+        $result = $this->executeQuery($sql);
+        if(empty($result)){
+            throw new NotFoundException("No se ha encontrado ningún elemento con su id $id");
+        }
+        return $result [0];
+    }
+    public function executeTransaction(callable $fnExecuteQuerys)
+    {
+        try{
+            $this->connection->beginTransaction();
+            $fnExecuteQuerys();
+            $this->connection->commit();
+        }catch(\PDOException $pdoException){
+            $this->connection->rollBack();
+            throw new QueryException("No se ha podido realizar la operación: " .
+            $pdoException->getMessage());
+        }
+    }
+    /**
+     * @param array $parameters
+     * @return string
+     */
+    private function getUpdates(array $parameters): string
+    {
+        $updates = "";
+        foreach ($parameters as $key => $value) {
+            if($key !== 'id'){
+                if($updates !== ''){
+                    $updates .= ", ";
+                }
+                $updates .= $key . "=:" . $key;
+            }
+        }
+        return $updates;
+    }
+    /**
+     * @param Entity $entity
+     * @throws QueryException
+     */
+    public function update(Entity $entity)
+    {
+        try{
+            $parameters = $entity->toArray();
+            $sql = sprintf(
+                'UPDATE %s SET %s WHERE id = :id ',
+                $this->table,
+                $this->getUpdates($parameters)
+            );
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($parameters);
+        
+        }catch(\PDOException $pdoException){
+            throw new QueryException("Error al actualizar el elemento con id
+            {$parameters['id']}: " . $pdoException->getMessage() );
         }
     }
 }
