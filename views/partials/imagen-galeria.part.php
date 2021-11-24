@@ -1,6 +1,9 @@
 <div id="category<?=$categoryId?>" class="tab-pane <?=($active ? 'active': '')?>" >
   <div class="row popup-gallery">
-      <?php foreach ($galeria as $itemGaleria):?>
+      <?php 
+          $repositoriogaleriacategoria = new ImagenGaleriaRepository();
+          $galeriacategoria = $repositoriogaleriacategoria->findCategory($categoryId);
+        foreach ($galeriacategoria as $itemGaleria):?>
       <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="sol">
             <img class="img-responsive" src="<?=$itemGaleria->getUrlPortfolio()?>" alt="<?=$itemGaleria->getDescripcion()?>">

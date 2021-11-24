@@ -66,6 +66,14 @@ abstract class QueryBuilder
         }
         return $result [0];
     }
+    public function findCategory(int $categoria){
+        $sql = "SELECT * FROM $this->table WHERE categoria = $categoria";
+        $result = $this->executeQuery($sql);
+        if(empty($result)){
+            throw new NotFoundException("No se ha encontrado ningún elemento con la categoria $categoria");
+        }
+        return $result;
+    }
     public function executeTransaction(callable $fnExecuteQuerys)
     {
         try{

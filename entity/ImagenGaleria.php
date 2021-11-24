@@ -237,6 +237,7 @@ class ImagenGaleria extends Entity
 
         return $this;
     }
+
     
     public function toArray(): array
     {
