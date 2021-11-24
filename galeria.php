@@ -16,10 +16,10 @@
     require_once "./database/QueryBuilder.php";
     require_once "./database/Connection.php";
     require_once "./core/App.php";
-    require_once "./utils/Forms/SelectElement.php";
-    require_once "./utils/Forms/OptionElement.php";
     require_once "./repository/ImagenGaleriaRepository.php";
     require_once "./repository/CategoriaRepository.php";
+    require_once "./utils/Forms/SelectElement.php";
+    require_once "./utils/Forms/OptionElement.php";
     
     $info = $urlImagen = "";
 
