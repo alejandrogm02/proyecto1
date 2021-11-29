@@ -1,4 +1,8 @@
 <?php
+    session_start();
+    if(!isset($_SESSION['username'])){
+      header('location: /login.php');
+    }
     $title = "Asociados";
     require_once "./utils/utils.php";
     require_once "./utils/Forms/InputElement.php";
