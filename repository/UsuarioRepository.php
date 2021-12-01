@@ -8,7 +8,7 @@ class UsuarioRepository extends QueryBuilder
     *
     * @var IPasswordGenerator
     */
-    public $passwordGenerator;
+    protected $passwordGenerator;
 
 public function __construct(IPasswordGenerator $passwordGenerator){
 
